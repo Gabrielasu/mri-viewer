@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DICOM Disc Viewer</title>
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+  <header id="topbar">
+    <div class="brand">🩻 DICOM Disc Viewer</div>
+    <button id="btn-open" class="btn" title="Open ISO / DICOM files">Open files…</button>
+    <input id="file-input" type="file" multiple hidden>
+    <span class="sep"></span>
+    <div class="toolgroup">
+      <button class="btn tool active" data-tool="wl" title="Window / Level — drag (1)">W/L</button>
+      <button class="btn tool" data-tool="pan" title="Pan — drag (2). Middle-drag or Space+drag always pans">Pan</button>
+      <button class="btn tool" data-tool="zoom" title="Zoom — drag up/down (3). Right-drag or pinch always zooms">Zoom</button>
+      <button class="btn tool" data-tool="measure" title="Measure length — drag (4)">📏</button>
+    </div>
+    <select id="preset-select" class="btn" title="Window presets"><option>Window preset…</option></select>
+    <button id="btn-invert" class="btn" title="Invert grayscale (i)">Invert</button>
+    <button id="btn-reset" class="btn" title="Reset view & window (r)">Reset</button>
+    <button id="btn-clear-measure" class="btn" title="Clear measurements on slice (c)">Clear 📏</button>
+    <span class="sep"></span>
+    <button id="btn-play" class="btn" title="Cine play / pause (p)">▶</button>
+    <input id="fps" type="range" min="2" max="30" value="12" title="Cine speed">
+    <span id="fps-label" class="dim">12 fps</span>
+    <span class="spacer"></span>
+    <button id="btn-export" class="btn" title="Save current view as PNG">Export PNG</button>
+    <button id="btn-export-series" class="btn" title="Save every slice in the selected series as full-resolution PNG files in a ZIP">Export series</button>
+    <button id="btn-export-study" class="btn" title="Save every series in the current scan as separate folders in a ZIP">Export scan</button>
+    <button id="btn-export-all" class="btn" title="Save every loaded scan, organized by scan and series, in one ZIP">Export all scans</button>
+    <button id="btn-help" class="btn" title="Keyboard shortcuts">?</button>
+  </header>
+
+  <main id="layout">
+    <aside id="sidebar">
+      <div id="series-list"></div>
+    </aside>
+    <section id="viewer">
+      <canvas id="view-canvas"></canvas>
+      <div id="welcome">
+        <div class="welcome-box">
+          <div class="welcome-icon">💿</div>
+          <h1>Drop your MRI / CT disc images here</h1>
+          <p>Drag <strong>.iso</strong> files (or DICOM folders / files) from Finder anywhere
+             into this window. Everything is read locally in your browser —
+             nothing is uploaded anywhere.</p>
+          <button id="welcome-open" class="btn big">Choose files…</button>
+        </div>
+      </div>
+      <div id="slice-bar">
+        <input id="slice-slider" type="range" min="0" max="0" value="0">
+        <span id="slice-label" class="dim">– / –</span>
+      </div>
+    </section>
+  </main>
+
+  <footer id="statusbar">
+    <span id="status-text"></span>
+    <div id="progress" class="hidden"><div id="progress-bar"></div></div>
+    <span class="spacer"></span>
+    <span id="probe-text" class="dim"></span>
+  </footer>
+
+  <div id="drop-overlay"><div>Drop to open</div></div>
+
+  <div id="help-overlay" class="hidden">
+    <div class="help-box">
+      <h2>Controls</h2>
+      <table>
+        <tr><td>Mouse wheel</td><td>Scroll through slices</td></tr>
+        <tr><td>Left-drag</td><td>Active tool (W/L · Pan · Zoom · Measure)</td></tr>
+        <tr><td>Right-drag / pinch</td><td>Zoom</td></tr>
+        <tr><td>Middle-drag / Space+drag</td><td>Pan</td></tr>
+        <tr><td>Double-click</td><td>Fit image to window</td></tr>
+        <tr><td>← → ↑ ↓</td><td>Previous / next slice</td></tr>
+        <tr><td>PgUp / PgDn</td><td>Jump 10 slices</td></tr>
+        <tr><td>Home / End</td><td>First / last slice</td></tr>
+        <tr><td>1 2 3 4</td><td>Select tool</td></tr>
+        <tr><td>+ − 0</td><td>Zoom in / out / fit</td></tr>
+        <tr><td>i · r · p · c</td><td>Invert · Reset · Cine · Clear measurements</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <script src="js/iso9660.js"></script>
+  <script src="js/dicom.js"></script>
+  <script src="js/dicomdir.js"></script>
+  <script src="js/stack.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
