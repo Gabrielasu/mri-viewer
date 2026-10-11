@@ -1,0 +1,18 @@
+# OS
+.DS_Store
+
+# Private scans and medical images
+data/
+scans/
+patient-data/
+*.iso
+*.dcm
+*.dicom
+DICOMDIR
+*.nii
+*.nii.gz
+*.zip
+
+# Private test fixtures and screenshots
+test/fixtures/
+test/artifacts/
